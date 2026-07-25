@@ -1,6 +1,4 @@
 #!/usr/bin/python3
-<<<<<<< HEAD
-=======
 def welcome_message():
     print("PERIOD POVERTY ADVOCACY PLATFORM")
     print("Connecting Schools and Donors to End Period Poverty")
@@ -19,7 +17,7 @@ if __name__ == "__main__":
     print(f"You selected {role}")
 
 
->>>>>>> Member1
+Member1
 import sqlite3
 from datetime import date
 
@@ -27,10 +25,6 @@ from datetime import date
 #   Functions: create_schools_table, get_school_data,
 #              save_school_data, display_schools_table,
 #              school_registration
-<<<<<<< HEAD
-=======
-
->>>>>>> Member1
 
 def create_schools_table():
     """Creates the schools table in the database if it doesn't exist."""
@@ -164,7 +158,6 @@ def school_registration():
 # ── Temporary test runner (Member 1 will replace this) ──────
 if __name__ == "__main__":
     school_registration()
-<<<<<<< HEAD
 #!/usr/bin/python3
 def welcome_message():
     print("PERIOD POVERTY ADVOCACY PLATFORM")
@@ -182,6 +175,3 @@ if __name__ == "__main__":
     welcome_message()
     role = role_selection()
     print(f"You selected {role}")
-=======
->>>>>>> Member1
-
