@@ -223,6 +223,84 @@ def school_registration():
         days_lost,
         annual_cost
     )
+# ============================================================
+    # SAVE CHANGES
+    # ============================================================
+
+    print("\n===============================")
+    print(" SAVE CHANGES")
+    print("===============================")
+
+    while True:
+
+        save_choice = input(
+            "Would you like to save this information? (yes/no): "
+        ).strip().lower()
+
+        if save_choice == "yes":
+
+            save_school_data(
+                school_name,
+                population,
+                girls_affected,
+                days_missed,
+                pad_cost,
+                days_lost,
+                annual_cost
+            )
+
+            print("\n✓ Information saved successfully!")
+
+            display_schools_table()
+
+            break
+
+        elif save_choice == "no":
+
+            print("\nInformation was not saved.")
+
+            break
+
+        else:
+
+            print("Please enter 'yes' or 'no'.")
+
+    # ============================================================
+    # EXIT SYSTEM
+    # ============================================================
+
+    print("\n===============================")
+    print(" EXIT SYSTEM")
+    print("===============================")
+
+    while True:
+
+        exit_choice = input(
+            "Are you sure you want to exit? (yes/no): "
+        ).strip().lower()
+
+        if exit_choice == "yes":
+
+            print("\nThank you for using the School Registration System.")
+            print("Goodbye!")
+
+            return {
+                "school_name": school_name,
+                "population": population,
+                "girls_affected": girls_affected,
+                "days_missed": days_missed,
+                "pad_cost": pad_cost
+            }
+
+        elif exit_choice == "no":
+
+            print("\nReturning to the registration system...\n")
+
+            return school_registration()
+
+        else:
+
+            print("Please enter 'yes' or 'no'.")
 
     print("\nSchool successfully registered!")
 
