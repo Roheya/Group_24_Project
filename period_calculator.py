@@ -1,12 +1,11 @@
+#!/usr/bin/python3
 import sqlite3
 from datetime import date
 
-# ============================================================
 #   MEMBER 2 — SCHOOL REGISTRATION
 #   Functions: create_schools_table, get_school_data,
 #              save_school_data, display_schools_table,
 #              school_registration
-# ============================================================
 
 def create_schools_table():
     """Creates the schools table in the database if it doesn't exist."""
@@ -140,7 +139,6 @@ def school_registration():
 # ── Temporary test runner (Member 1 will replace this) ──────
 if __name__ == "__main__":
     school_registration()
-=======
 #!/usr/bin/python3
 def welcome_message():
     print("PERIOD POVERTY ADVOCACY PLATFORM")
