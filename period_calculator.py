@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import sqlite3
 from datetime import date
 
@@ -160,4 +159,3 @@ if __name__ == "__main__":
     role = role_selection()
     print(f"You selected {role}")
 
->>>>>>> Member1
