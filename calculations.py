@@ -27,3 +27,8 @@ def girls_affected(school_aged_girls):
     """the number of girls affected = number of girls in period poverty"""
     return int(validate_number(shool_aged_girls, "school_aged_girls"))
 
+def days_lost(school_aged_girls, days_missed):
+    #return the days lost yearly by the school, estimating the days missed by the girls around 5 days per month.
+    girls = validate_number(school_aged_girls, "school_aged_girls")
+    days_missed = validate_number(days_missed, "days_missed")
+    return round(girls * missed, 1)
