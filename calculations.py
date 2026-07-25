@@ -39,3 +39,15 @@ def estimated_cost(school_aged_girls, pad_cost, pads_per_year=PADS_PER_YEAR):
     price = validate_number(pad_cost, "single_pad_cost")
     pads = validate_number(pads_per_year, "pads_needed_yearly", allow_zero=False)
     return round(girls * pads * price, 2)
+
+def summary(school, pads_per_year=PADS_PER_YEAR):
+    #A dictonary with all the number calculated previously.
+    girls = school.get("school_aged_girls")
+    missed = school.get("days_missed")
+    return {
+            "girls_affected": girls_affected(girls),
+            "days_lost": days_lost(girls, missed),
+            "estimated_cost": estimated_cost(girls, school.get("pad_cost"),
+                                             pads_per_year),
+            "severity": severity_score(missed),
+            }
