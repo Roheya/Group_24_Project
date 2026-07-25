@@ -11,4 +11,15 @@ class MissingDataError(ValueError):
 
 def validate_number(value, field, allow_zero=True):
     #validate the value and return it as a float
+    if value is None or value == "":
+        raise MissingDataError(f"Missing value for '{field}'.")
+    try:
+        number =float(value)
+    except (TypeError, ValueError):
+        raise MissingDataError(f"'{field}' must be a number")
+    if number < 0:
+        raise MissingDataError(f"{number}, '{field}' cannot be negative")
+    if not allow_zero and number == 0:
+        raise MissingDataError(f" '{field}' cannot be zero.")
+    return number
 
