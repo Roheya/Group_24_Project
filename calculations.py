@@ -23,3 +23,7 @@ def validate_number(value, field, allow_zero=True):
         raise MissingDataError(f" '{field}' cannot be zero.")
     return number
 
+def girls_affected(school_aged_girls):
+    """the number of girls affected = number of girls in period poverty"""
+    return int(validate_number(shool_aged_girls, "school_aged_girls"))
+
