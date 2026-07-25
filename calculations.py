@@ -32,3 +32,10 @@ def days_lost(school_aged_girls, days_missed):
     girls = validate_number(school_aged_girls, "school_aged_girls")
     days_missed = validate_number(days_missed, "days_missed")
     return round(girls * missed, 1)
+
+def estimated_cost(school_aged_girls, pad_cost, pads_per_year=PADS_PER_YEAR):
+    #the estimated cost for the pads for the total number of girls per school.
+    girls = validate_number(school_aged_girls, "school_aged_girls")
+    price = validate_number(pad_cost, "single_pad_cost")
+    pads = validate_number(pads_per_year, "pads_needed_yearly", allow_zero=False)
+    return round(girls * pads * price, 2)
