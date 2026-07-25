@@ -40,6 +40,18 @@ def estimated_cost(school_aged_girls, pad_cost, pads_per_year=PADS_PER_YEAR):
     pads = validate_number(pads_per_year, "pads_needed_yearly", allow_zero=False)
     return round(girls * pads * price, 2)
 
+def severity_score(days_missed):
+    #classify how badly the average girl is affected.
+    d = validate_number(days_missed, "days_missed")
+    if d < 3:
+        return "Low"
+    elif d < 6:
+        return "Moderate"
+    elif d < 10:
+        return "High"
+    else:
+        return "Critical"
+
 def summary(school, pads_per_year=PADS_PER_YEAR):
     #A dictonary with all the number calculated previously.
     girls = school.get("school_aged_girls")
