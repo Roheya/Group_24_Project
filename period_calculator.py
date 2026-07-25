@@ -1,142 +1,245 @@
 import sqlite3
 from datetime import date
 
+DATABASE = "herperiod.db"
+SQL_FILE = "schools_records.sql"
+
+
 # ============================================================
-#   MEMBER 2 — SCHOOL REGISTRATION
-#   Functions: create_schools_table, get_school_data,
-#              save_school_data, display_schools_table,
-#              school_registration
+# DATABASE FUNCTIONS
 # ============================================================
 
-def create_schools_table():
-    """Creates the schools table in the database if it doesn't exist."""
-    conn = sqlite3.connect("herperiod.db")
+def create_database():
+    """Creates the database and schools table using schools.sql."""
+    conn = sqlite3.connect(DATABASE)
     cursor = conn.cursor()
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS schools (
-            id             INTEGER PRIMARY KEY AUTOINCREMENT,
-            school_name    TEXT UNIQUE NOT NULL,
-            population     INTEGER,
-            girls_affected INTEGER,
-            days_missed    REAL,
-            pad_cost       REAL,
-            days_lost      REAL,
-            annual_cost    REAL,
-            date_added     TEXT
-        )
-    """)
+
+    with open(SQL_FILE, "r") as file:
+        cursor.executescript(file.read())
+
     conn.commit()
     conn.close()
 
 
 def get_school_data(school_name):
-    """Check if a school already exists in the database."""
-    conn = sqlite3.connect("herperiod.db")
+    """Retrieve school data if it already exists."""
+    conn = sqlite3.connect(DATABASE)
     cursor = conn.cursor()
+
     cursor.execute(
-        "SELECT * FROM schools WHERE school_name = ?", (school_name,)
+        "SELECT * FROM schools WHERE school_name = ?",
+        (school_name,)
     )
+
     result = cursor.fetchone()
+
     conn.close()
+
     return result
 
 
-def save_school_data(school_name, population, girls_affected,
-                     days_missed, pad_cost, days_lost, annual_cost):
-    """Save a new school's data into the database."""
-    conn = sqlite3.connect("herperiod.db")
+def save_school_data(
+        school_name,
+        population,
+        girls_affected,
+        days_missed,
+        pad_cost,
+        days_lost,
+        annual_cost):
+    """Insert or update school information."""
+
+    conn = sqlite3.connect(DATABASE)
     cursor = conn.cursor()
+
     cursor.execute("""
         INSERT OR REPLACE INTO schools
-        (school_name, population, girls_affected, days_missed,
-         pad_cost, days_lost, annual_cost, date_added)
+        (
+            school_name,
+            population,
+            girls_affected,
+            days_missed,
+            pad_cost,
+            days_lost,
+            annual_cost,
+            date_added
+        )
+
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    """, (school_name, population, girls_affected, days_missed,
-          pad_cost, days_lost, annual_cost, str(date.today())))
+    """, (
+        school_name,
+        population,
+        girls_affected,
+        days_missed,
+        pad_cost,
+        days_lost,
+        annual_cost,
+        str(date.today())
+    ))
+
     conn.commit()
     conn.close()
 
 
 def display_schools_table():
-    """Display all schools currently saved in the database."""
-    conn = sqlite3.connect("herperiod.db")
+    """Display every school currently stored."""
+
+    conn = sqlite3.connect(DATABASE)
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM schools")
+
+    cursor.execute("""
+        SELECT
+            school_name,
+            population,
+            girls_affected,
+            days_missed,
+            pad_cost,
+            days_lost,
+            annual_cost,
+            date_added
+        FROM schools
+    """)
+
     rows = cursor.fetchall()
+
     conn.close()
 
-    print("\nCurrent contents of the schools table:")
-    print(f"\n{'School':<20} {'Population':<12} {'Girls Affected':<16} "
-          f"{'Days Missed':<13} {'Pad Cost':<10} "
-          f"{'Days Lost':<12} {'Annual Cost'}")
-    print("-" * 110)
-    for row in rows:
-        print(f"{row[1]:<20} {row[2]:<12} {row[3]:<16} "
-              f"{row[4]:<13} {row[5]:<10} "
-              f"{row[6]:<12} {row[7]:.2f}")
+    print("\nCurrent Schools Database")
+    print("-" * 120)
 
+    print(
+        f"{'School':<20}"
+        f"{'Population':<12}"
+        f"{'Girls':<12}"
+        f"{'Days Missed':<15}"
+        f"{'Pad Cost':<12}"
+        f"{'Days Lost':<15}"
+        f"{'Annual Cost':<18}"
+        f"{'Date Added'}"
+    )
+
+    print("-" * 120)
+
+    for row in rows:
+        print(
+            f"{row[0]:<20}"
+            f"{row[1]:<12}"
+            f"{row[2]:<12}"
+            f"{row[3]:<15}"
+            f"{row[4]:<12}"
+            f"{row[5]:<15}"
+            f"{row[6]:<18.2f}"
+            f"{row[7]}"
+        )
+
+
+# ============================================================
+# MAIN PROGRAM
+# ============================================================
 
 def school_registration():
-    """
-    Main Member 2 function.
-    Handles school registration and returns school data
-    for Member 3 to use in calculations.
-    """
-    create_schools_table()
 
-    print("\n[03] School Registration")
-    print("    Question: Prompt the user to enter their school name...")
-    print("-" * 70)
+    create_database()
+
+    print("\n===============================")
+    print(" SCHOOL REGISTRATION SYSTEM")
+    print("===============================")
 
     school_name = input("\nEnter your school name: ").strip()
 
     existing = get_school_data(school_name)
 
     if existing:
-        print(f"Access granted. Welcome back, {school_name}.")
+
+        print(f"\nWelcome back, {school_name}!")
+
+        print("\nSchool information already exists.\n")
+
+        print(f"Population: {existing[2]}")
+        print(f"Girls Affected: {existing[3]}")
+        print(f"Days Missed: {existing[4]}")
+        print(f"Pad Cost: {existing[5]}")
+
         return {
-            "school_name"   : existing[1],
-            "population"    : existing[2],
+            "school_name": existing[1],
+            "population": existing[2],
             "girls_affected": existing[3],
-            "days_missed"   : existing[4],
-            "pad_cost"      : existing[5]
+            "days_missed": existing[4],
+            "pad_cost": existing[5]
         }
 
-    else:
-        print(f"Access granted. Welcome, {school_name}.")
-        print(f"\nNo data on file yet for {school_name}. Let's set that up.")
+    print(f"\nWelcome, {school_name}!")
+    print("No information found.")
+    print("Please register your school.\n")
 
-        while True:
-            try:
-                population     = int(input("Total number of students (population): "))
-                girls_affected = int(input("Number of school-aged girls (menstruating age): "))
-                days_missed    = float(input("Average school days missed per menstruating girl annually: "))
-                pad_cost       = float(input("Average price of one sanitary pad (RWF): "))
-                break
-            except ValueError:
-                print("Invalid input. Please enter numbers only.\n")
+    while True:
 
-        pads_per_period = days_missed * 4
-        pads_per_year   = pads_per_period * 12
-        annual_cost     = pads_per_year * pad_cost * girls_affected
-        days_lost       = girls_affected * days_missed * 12
+        try:
 
-        save_school_data(school_name, population, girls_affected,
-                         days_missed, pad_cost, days_lost, annual_cost)
+            population = int(
+                input("Total student population: ")
+            )
 
-        print(f"\nData for {school_name} has been saved.")
+            girls_affected = int(
+                input("Number of school-aged girls: ")
+            )
 
-        display_schools_table()
+            days_missed = float(
+                input("Average school days missed annually: ")
+            )
 
-        return {
-            "school_name"   : school_name,
-            "population"    : population,
-            "girls_affected": girls_affected,
-            "days_missed"   : days_missed,
-            "pad_cost"      : pad_cost
-        }
+            pad_cost = float(
+                input("Average price of ONE sanitary pad (RWF): ")
+            )
+
+            break
+
+        except ValueError:
+
+            print("\nPlease enter valid numbers.\n")
+
+    # Calculations
+
+    pads_per_period = days_missed * 4
+    pads_per_year = pads_per_period * 12
+
+    annual_cost = (
+        pads_per_year *
+        pad_cost *
+        girls_affected
+    )
+
+    days_lost = (
+        girls_affected *
+        days_missed *
+        12
+    )
+
+    save_school_data(
+        school_name,
+        population,
+        girls_affected,
+        days_missed,
+        pad_cost,
+        days_lost,
+        annual_cost
+    )
+
+    print("\nSchool successfully registered!")
+
+    display_schools_table()
+
+    return {
+        "school_name": school_name,
+        "population": population,
+        "girls_affected": girls_affected,
+        "days_missed": days_missed,
+        "pad_cost": pad_cost
+    }
 
 
-# ── Temporary test runner (Member 1 will replace this) ──────
+# ============================================================
+# RUN PROGRAM
+# ============================================================
+
 if __name__ == "__main__":
     school_registration()
