@@ -172,7 +172,10 @@ def school_registration():
     print("===============================")
 
     school_name = input("\nEnter your school name: ").strip()
-    if school_name not in REGISTERED_SCHOOLS:                    # <-- NEW         print(f"\nSorry, '{school_name}' is not on our list of registered schools.")   # <-- NEW         print("Only registered schools may proceed. Please contact the program administrator if you believe this is an error.")  # <-- NEW         return None                                              # <-- NEW 
+    if school_name not in REGISTERED_SCHOOLS:
+        print(f"\nSorry, '{school_name}' is not on our list of registered schools.")
+        print("Only registered schools may proceed. Please contact the program administrator if you believe this is an error.")
+        return None                                              # <-- NEW 
     existing = get_school_data(school_name)
 
     if existing:
