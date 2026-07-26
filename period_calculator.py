@@ -288,7 +288,7 @@ def seed_sample_data():
 if __name__ == "__main__":
     seed_sample_data()
     donor_workflow()
-=======
+
 def get_school_data(school_name):
     """Retrieve school data if it already exists."""
     conn = sqlite3.connect(DATABASE)
