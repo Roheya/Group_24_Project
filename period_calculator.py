@@ -24,7 +24,7 @@ def initialize_db():
         """
         CREATE TABLE IF NOT EXISTS schools (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
+            school_name TEXT NOT NULL,
             population INTEGER,
             girls_affected INTEGER,
             days_missed REAL,
@@ -86,7 +86,7 @@ def create_database():
 
     with open(SQL_FILE, "r") as file:
         cursor.executescript(file.read())
->>>>>>> 9d1a037d960eaad647509789e7eed84f955ee553
+
 
     conn.commit()
     conn.close()
@@ -99,7 +99,7 @@ def get_all_schools():
     conn = connect_db()
     cursor = conn.cursor()
     cursor.execute(
-        "SELECT name, population, girls_affected, days_missed, pad_cost, days_lost, annual_cost FROM schools"
+        "SELECT school_name, population, girls_affected, days_missed, pad_cost, days_lost, annual_cost FROM schools"
     )
     rows = cursor.fetchall()
     conn.close()
@@ -194,9 +194,9 @@ def list_and_export_report():
     print("=" * 95)
 
     for school in schools:
-        name, pop, girls, missed, pad, lost, cost = school
+        school_name, pop, girls, missed, pad, lost, cost = school
         print(
-            f"{name:<22} | {pop:<10} | {girls:<14} | {missed:<11.1f} | {pad:<10.2f} | {lost:<10.1f} | {cost:<15.2f}"
+            f"{school_name:<22} | {pop:<10} | {girls:<14} | {missed:<11.1f} | {pad:<10.2f} | {lost:<10.1f} | {cost:<15.2f}"
         )
     print("=" * 95)
 
@@ -278,7 +278,7 @@ def seed_sample_data():
     ]
 
     cursor.executemany(
-        "INSERT INTO schools (name, population, girls_affected, days_missed, pad_cost, days_lost, annual_cost) VALUES (?, ?, ?, ?, ?, ?, ?)",
+        "INSERT INTO schools (school_name, population, girls_affected, days_missed, pad_cost, days_lost, annual_cost) VALUES (?, ?, ?, ?, ?, ?, ?)",
         sample_schools,
     )
     conn.commit()
@@ -593,4 +593,4 @@ def school_registration():
 if __name__ == "__main__":
     school_registration()
 
->>>>>>> 9d1a037d960eaad647509789e7eed84f955ee553
+
