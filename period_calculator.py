@@ -234,15 +234,15 @@ def school_registration():
         12
     )
 
-    save_school_data(
-        school_name,
-        population,
-        girls_affected,
-        days_missed,
-        pad_cost,
-        days_lost,
-        annual_cost
-    )
+    
+    
+        
+
+
+        
+        
+    
+    
 # ============================================================
     # SAVE CHANGES
     # ============================================================
@@ -335,10 +335,5 @@ def school_registration():
     }
 
 
-# ============================================================
-# RUN PROGRAM
-# ============================================================
-
-if __name__ == "__main__":
-    school_registration()
+    
 
