@@ -14,6 +14,9 @@ import sqlite3
 import csv
 from datetime import date
 
+import calculations
+from calculations import MissingDataError
+
 DATABASE = "herperiod.db"
 SQL_FILE = "schools_records.sql"
 
@@ -351,23 +354,19 @@ def school_registration():
             print("\nPlease enter valid numeric values.\n")
 
     # --------------------------------------------------------
-    # CALCULATIONS
+    # MEMBER 3: CALCULATIONS
     # --------------------------------------------------------
 
-    pads_per_period = days_missed * 4
-    pads_per_year = pads_per_period * 12
+    try:
+        days_lost = calculations.days_lost(girls_affected, days_missed)
+        annual_cost = calculations.estimated_cost(girls_affected, pad_cost)
+        girls_affected = calculations.girls_affected(girls_affected)
+        severity = calculations.severity_score(days_missed)
 
-    days_lost = (
-        girls_affected *
-        days_missed *
-        12
-    )
-
-    annual_cost = (
-        girls_affected *
-        pads_per_year *
-        pad_cost
-    )
+    except MissingDataError as error:
+        print(f"\nError: {error}")
+        print("Registration cancelled. Please try again.")
+        return
 
     # --------------------------------------------------------
     # DISPLAY CALCULATED RESULTS
