@@ -9,3 +9,11 @@ CREATE TABLE IF NOT EXISTS schools (
     annual_cost REAL,
     date_added TEXT
 );
+
+CREATE TABLE IF NOT EXISTS pledges (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    donor_name TEXT NOT NULL,
+    school_name TEXT NOT NULL,
+    pledge_amount REAL NOT NULL,
+    pledge_date TEXT DEFAULT CURRENT_TIMESTAMP
+);

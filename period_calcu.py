@@ -1,21 +1,13 @@
 #!/usr/bin/python3
-def welcome_message():
-    print("PERIOD POVERTY ADVOCACY PLATFORM")
-    print("Connecting Schools and Donors to End Period Poverty")
-    print("This application helps schools report the impact of period poverty on girls' education, and helps donors see where their support can make a measurable difference.")
+"""
+Period Poverty Advocacy Platform
+Integrated Version
 
-def role_selection():
-    print("What are you logging in as?")
-    print("1. School")
-    print("2. Donor")
-    print("3. Exit")
-    choice = input("Enter your choice(1-3):")
-    return choice
-if __name__ == "__main__":
-    welcome_message()
-    role = role_selection()
-    print(f"You selected {role}")
-
+Member 1 - Welcome Screen
+Member 2 - School Registration
+Member 3 - Calculations
+Member 4 - Donor Workflow
+"""
 
 import sqlite3
 import csv
@@ -25,30 +17,85 @@ DATABASE = "herperiod.db"
 SQL_FILE = "schools_records.sql"
 
 # ============================================================
-#   MEMBER 2 — SCHOOL REGISTRATION
-#   Functions: create_schools_table, get_school_data,
-#              save_school_data, display_schools_table,
-#              school_registration
+# WELCOME SCREEN (MEMBER 1)
+# ============================================================
+
+def welcome_message():
+    print("\n" + "=" * 70)
+    print("        PERIOD POVERTY ADVOCACY PLATFORM")
+    print("=" * 70)
+    print("Connecting Schools and Donors to End Period Poverty")
+    print(
+        "This platform allows schools to register impact data "
+        "and donors to support schools in need."
+    )
+
+
+def role_selection():
+    print("\nLogin As:")
+    print("1. School")
+    print("2. Donor")
+    print("3. Exit")
+
+    return input("\nEnter your choice (1-3): ").strip()
+
+
+# ============================================================
+# DATABASE INITIALIZATION
+# ============================================================
 
 def create_database():
-    """Creates the database and schools table using schools.sql."""
+    """
+    Creates all required tables.
+    Reads schools table from schools_records.sql
+    Creates pledges table if it doesn't exist.
+    """
+
     conn = sqlite3.connect(DATABASE)
     cursor = conn.cursor()
 
+    # Create Schools table
+
     with open(SQL_FILE, "r") as file:
         cursor.executescript(file.read())
+
+    # Create Donor table
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS pledges (
+
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+            donor_name TEXT NOT NULL,
+
+            school_name TEXT NOT NULL,
+
+            pledge_amount REAL NOT NULL,
+
+            pledge_date TEXT DEFAULT CURRENT_TIMESTAMP
+
+        )
+    """)
 
     conn.commit()
     conn.close()
 
 
+# ============================================================
+# SCHOOL DATABASE FUNCTIONS
+# ============================================================
+
 def get_school_data(school_name):
-    """Retrieve school data if it already exists."""
+
     conn = sqlite3.connect(DATABASE)
     cursor = conn.cursor()
 
     cursor.execute(
-        "SELECT * FROM schools WHERE school_name = ?",
+        """
+        SELECT *
+        FROM schools
+        WHERE school_name = ?
+        """,
         (school_name,)
     )
 
@@ -67,14 +114,14 @@ def save_school_data(
         pad_cost,
         days_lost,
         annual_cost):
-    """Insert or update school information."""
 
     conn = sqlite3.connect(DATABASE)
     cursor = conn.cursor()
 
     cursor.execute("""
-        INSERT OR REPLACE INTO schools
-        (
+
+        INSERT OR REPLACE INTO schools(
+
             school_name,
             population,
             girls_affected,
@@ -83,10 +130,13 @@ def save_school_data(
             days_lost,
             annual_cost,
             date_added
+
         )
 
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+
     """, (
+
         school_name,
         population,
         girls_affected,
@@ -95,6 +145,7 @@ def save_school_data(
         days_lost,
         annual_cost,
         str(date.today())
+
     ))
 
     conn.commit()
@@ -102,13 +153,15 @@ def save_school_data(
 
 
 def display_schools_table():
-    """Display every school currently stored."""
 
     conn = sqlite3.connect(DATABASE)
+
     cursor = conn.cursor()
 
     cursor.execute("""
+
         SELECT
+
             school_name,
             population,
             girls_affected,
@@ -117,7 +170,9 @@ def display_schools_table():
             days_lost,
             annual_cost,
             date_added
+
         FROM schools
+
     """)
 
     rows = cursor.fetchall()
@@ -141,6 +196,7 @@ def display_schools_table():
     print("-" * 120)
 
     for row in rows:
+
         print(
             f"{row[0]:<20}"
             f"{row[1]:<12}"
@@ -152,55 +208,72 @@ def display_schools_table():
             f"{row[7]}"
         )
 
+
 # ============================================================
 # DONOR DATABASE FUNCTIONS
 # ============================================================
-import csv
-import sqlite3
 
-def connect_db():
-    """Establishes connection to the shared SQLite database."""
-    return sqlite3.connect(DATABASE)
+def get_all_schools():
 
+    conn = sqlite3.connect(DATABASE)
 
-def initialize_db():
-    """Ensures necessary database tables exist."""
-    conn = connect_db()
     cursor = conn.cursor()
 
-    # Table for school impact data
-    cursor.execute(
-        """
-        CREATE TABLE IF NOT EXISTS schools (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
-            population INTEGER,
-            girls_affected INTEGER,
-            days_missed REAL,
-            pad_cost REAL DEFAULT 1000.0,
-            days_lost REAL,
-            annual_cost REAL
-        )
-    """
-    )
+    cursor.execute("""
 
-    # Table for donor pledges
-    cursor.execute(
-        """
-        CREATE TABLE IF NOT EXISTS pledges (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            donor_name TEXT NOT NULL,
-            school_name TEXT NOT NULL,
-            pledge_amount REAL NOT NULL,
-            pledge_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
-    """
-    )
+        SELECT
 
-    conn.commit()
+            school_name,
+            population,
+            girls_affected,
+            days_missed,
+            pad_cost,
+            days_lost,
+            annual_cost
+
+        FROM schools
+
+    """)
+
+    schools = cursor.fetchall()
+
     conn.close()
 
+    return schools
 
+
+def record_pledge(
+        donor_name,
+        school_name,
+        pledge_amount):
+
+    conn = sqlite3.connect(DATABASE)
+
+    cursor = conn.cursor()
+
+    cursor.execute("""
+
+        INSERT INTO pledges(
+
+            donor_name,
+            school_name,
+            pledge_amount
+
+        )
+
+        VALUES (?, ?, ?)
+
+    """, (
+
+        donor_name,
+        school_name,
+        pledge_amount
+
+    ))
+
+    conn.commit()
+
+    conn.close()
 # ============================================================
 # DONOR WORKFLOW (MEMBER 4)
 # ============================================================
@@ -449,138 +522,6 @@ def donor_workflow():
 
             print("Invalid option.")
 # ============================================================
-# MAIN PROGRAM
-# ============================================================
-
-def school_registration():
-
-    create_database()
-
-    print("\n===============================")
-    print(" SCHOOL REGISTRATION SYSTEM")
-    print("===============================")
-
-    school_name = input("\nEnter your school name: ").strip()
-
-    existing = get_school_data(school_name)
-
-    if existing:
-
-        print(f"\nWelcome back, {school_name}!")
-
-        print("\nSchool information already exists.\n")
-
-        print(f"Population: {existing[2]}")
-        print(f"Girls Affected: {existing[3]}")
-        print(f"Days Missed: {existing[4]}")
-        print(f"Pad Cost: {existing[5]}")
-
-        return {
-            "school_name": existing[1],
-            "population": existing[2],
-            "girls_affected": existing[3],
-            "days_missed": existing[4],
-            "pad_cost": existing[5]
-        }
-
-    print(f"\nWelcome, {school_name}!")
-    print("No information found.")
-    print("Please register your school.\n")
-
-    while True:
-
-        try:
-
-            population = int(
-                input("Total student population: ")
-            )
-
-            girls_affected = int(
-                input("Number of school-aged girls: ")
-            )
-
-            days_missed = float(
-                input("Average school days missed annually: ")
-            )
-
-            pad_cost = float(
-                input("Average price of ONE sanitary pad (RWF): ")
-            )
-
-            break
-
-        except ValueError:
-
-            print("\nPlease enter valid numbers.\n")
-
-    # Calculations
-
-    pads_per_period = days_missed * 4
-    pads_per_year = pads_per_period * 12
-
-    annual_cost = (
-        pads_per_year *
-        pad_cost *
-        girls_affected
-    )
-
-    days_lost = (
-        girls_affected *
-        days_missed *
-        12
-    )
-
-    save_school_data(
-        school_name,
-        population,
-        girls_affected,
-        days_missed,
-        pad_cost,
-        days_lost,
-        annual_cost
-    )
-# ============================================================
-    # SAVE CHANGES
-    # ============================================================
-
-    print("\n===============================")
-    print(" SAVE CHANGES")
-    print("===============================")
-
-    while True:
-
-        save_choice = input(
-            "Would you like to save this information? (yes/no): "
-        ).strip().lower()
-
-        if save_choice == "yes":
-
-            save_school_data(
-                school_name,
-                population,
-                girls_affected,
-                days_missed,
-                pad_cost,
-                days_lost,
-                annual_cost
-            )
-
-            print("\n✓ Information saved successfully!")
-
-            display_schools_table()
-
-            break
-
-        elif save_choice == "no":
-
-            print("\nInformation was not saved.")
-
-            break
-
-        else:
-
-            print("Please enter 'yes' or 'no'.")
-# ============================================================
 # MAIN MENU
 # ============================================================
 
@@ -615,60 +556,12 @@ def main():
 
             print("\nInvalid choice.")
             print("Please enter 1, 2 or 3.\n")
-    # ============================================================
-    # EXIT SYSTEM
-    # ============================================================
-
-    print("\n===============================")
-    print(" EXIT SYSTEM")
-    print("===============================")
-
-    while True:
-
-        exit_choice = input(
-            "Are you sure you want to exit? (yes/no): "
-        ).strip().lower()
-
-        if exit_choice == "yes":
-
-            print("\nThank you for using the School Registration System.")
-            print("Goodbye!")
-
-            return {
-                "school_name": school_name,
-                "population": population,
-                "girls_affected": girls_affected,
-                "days_missed": days_missed,
-                "pad_cost": pad_cost
-            }
-
-        elif exit_choice == "no":
-
-            print("\nReturning to the registration system...\n")
-
-            return school_registration()
-
-        else:
-
-            print("Please enter 'yes' or 'no'.")
-
-    print("\nSchool successfully registered!")
-
-    display_schools_table()
-
-    return {
-        "school_name": school_name,
-        "population": population,
-        "girls_affected": girls_affected,
-        "days_missed": days_missed,
-        "pad_cost": pad_cost
-    }
 
 
 # ============================================================
-# RUN PROGRAM
+# PROGRAM START
 # ============================================================
 
 if __name__ == "__main__":
-    school_registration()
 
+    main()
