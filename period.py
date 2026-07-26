@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-Period Poverty Advocacy Platform
+HERPERIOD POVERTY CALCULATOR 
 
 Integrated System
 
@@ -28,7 +28,7 @@ def welcome_message():
     """Display the application welcome message."""
 
     print("\n" + "=" * 70)
-    print("        PERIOD POVERTY ADVOCACY PLATFORM")
+    print("        HERPERIOD POVERTY CALCULATOR")
     print("=" * 70)
     print("Connecting Schools and Donors to End Period Poverty")
     print(
@@ -40,12 +40,12 @@ def welcome_message():
 def role_selection():
     """Display login menu."""
 
-    print("\nLogin As:")
+    print("Who Are You Logging In As?:")
     print("1. School")
     print("2. Donor")
     print("3. Exit")
 
-    return input("\nEnter your choice (1-3): ").strip()
+    return input("Enter your choice (1-3): ").strip()
 
 
 # ============================================================
@@ -310,7 +310,7 @@ def school_registration():
     ]
 
     if school_name not in recognized_schools:
-        print("\nThe school is not recognised by the Rwanda Public Basic Education.")
+        print("The school is not recognised by the Rwanda Public Basic Education.")
         return
 
     existing = get_school_data(school_name)
@@ -754,7 +754,7 @@ def main():
 
             print("\n======================================")
             print(" Thank you for using the")
-            print(" Period Poverty Advocacy Platform")
+            print(" HerPeriod Poverty Calculator")
             print(" Goodbye!")
             print("======================================\n")
 
