@@ -297,6 +297,22 @@ def school_registration():
 
     school_name = input("\nEnter your school name: ").strip()
 
+    # List of schools recognized by the Rwanda Public Basic Education
+    recognized_schools = [
+        "Excella High School",
+        "GS KIMIRONKO 1",
+        "GS KIMIRONKO 2",
+        "Ecole St Rita",
+        "Kigali High School",
+        "Green Hill Academy",
+        "GS Runda Isonga",
+        "GS Burema"
+    ]
+
+    if school_name not in recognized_schools:
+        print("\nThe school is not recognised by the Rwanda Public Basic Education.")
+        return
+
     existing = get_school_data(school_name)
 
     # --------------------------------------------------------
