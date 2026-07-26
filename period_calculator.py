@@ -155,6 +155,13 @@ def display_schools_table():
 # ============================================================
 # MAIN PROGRAM
 # ============================================================
+REGISTERED_SCHOOLS = [
+        "Kigali High School",
+        "GS KIMIRONKO 1",
+        "Ecole St Rita",
+        "Green Hills Academy",
+        ]
+
 
 def school_registration():
 
