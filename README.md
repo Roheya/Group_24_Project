@@ -169,4 +169,4 @@ Becky - Calculations
 Pax - Pledge Application
 Refilwe - Connection of Databases and Save and Listing Reporting & Logout
 
-The code is organized into four member-owned sections (Welcome Screen, School Registration, Calculations, Donor Workflow) — update this table with who owned which section.
+The code is organized into four member-owned sections (Welcome Screen, School Registration, Calculations, Donor Workflow) 
