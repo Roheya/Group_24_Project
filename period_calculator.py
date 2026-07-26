@@ -47,7 +47,7 @@ def initialize_db():
         )
     """
     )
-=======
+
 #!/usr/bin/python3
 def welcome_message():
     print("HerPeriod Poverty Calculator")
