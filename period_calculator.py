@@ -172,7 +172,7 @@ def school_registration():
     print("===============================")
 
     school_name = input("\nEnter your school name: ").strip()
-
+     if school_name not in REGISTERED_SCHOOLS:                    # <-- NEW         print(f"\nSorry, '{school_name}' is not on our list of registered schools.")   # <-- NEW         print("Only registered schools may proceed. Please contact the program administrator if you believe this is an error.")  # <-- NEW         return None                                              # <-- NEW 
     existing = get_school_data(school_name)
 
     if existing:
@@ -224,22 +224,15 @@ def school_registration():
 
             print("\nPlease enter valid numbers.\n")
 
-    # Calculations
+    
+    
 
-    pads_per_period = days_missed * 4
-    pads_per_year = pads_per_period * 12
+    
+        
+    
+    
 
-    annual_cost = (
-        pads_per_year *
-        pad_cost *
-        girls_affected
-    )
 
-    days_lost = (
-        girls_affected *
-        days_missed *
-        12
-    )
 
     save_school_data(
         school_name,
